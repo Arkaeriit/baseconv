@@ -16,32 +16,32 @@
 
 void prompt(char* str){
     printf(">");
-    fgets(str, 1000, stdin);
+    fgets(str, 64, stdin);
 }
 
 void detail(uint64_t num){
-    char* numCH = &num;
+    char* numCH = (char*) &num;
     printf("ASCII : %c\n"
-           "décimal : %i\n"
-           "héxadécimal : %x\n"
+           "décimal : %" PRIu64 "\n"
+           "héxadécimal : %" PRIx64 "\n"
            "binaire : " BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN "\n"
            "----------------------------\n"
            ,(char) num, num, num, BYTE_TO_BINARY(numCH[7]), BYTE_TO_BINARY(numCH[6]), BYTE_TO_BINARY(numCH[5]), BYTE_TO_BINARY(numCH[4]), BYTE_TO_BINARY(numCH[3]), BYTE_TO_BINARY(numCH[2]), BYTE_TO_BINARY(numCH[1]), BYTE_TO_BINARY(numCH[0]));
 }
 
 void mainLoop(){
-    char* str = malloc(1024);
+    char* str = malloc(66);
     prompt(str);
     while(strcmp(str,"exit\n") && strcmp(str,":q\n")){
         if(strlen(str) == 2)
             detail(str[0]);
         else if(str[0] == 'x' || str[0] == 'h'){
             uint64_t nmb;
-            sscanf(str+1,"%x\n",&nmb);
+            sscanf(str+1,"%" PRIx64 "\n",&nmb);
             detail(nmb);
         }else if(str[0] == 'd'){
             uint64_t nmb;
-            sscanf(str+1,"%i\n",&nmb);
+            sscanf(str+1,"%" PRIu64 "\n",&nmb);
             detail(nmb);
         }else{
             uint64_t nmb;
