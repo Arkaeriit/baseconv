@@ -16,21 +16,33 @@
 
 void prompt(char* str){
     printf(">");
-    fgets(str, 64, stdin);
+    fgets(str, 66, stdin);
 }
 
 void detail(uint64_t num){
     char* numCH = (char*) &num;
     printf("ASCII : %c\n"
-           "décimal : %" PRIu64 "\n"
-           "héxadécimal : %" PRIx64 "\n"
-           "binaire : " BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN "\n"
+           "decimal : %" PRIu64 "\n"
+           "hexadecimal : %" PRIx64 "\n"
+           "binary : " BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN "\n"
            "----------------------------\n"
            ,(char) num, num, num, BYTE_TO_BINARY(numCH[7]), BYTE_TO_BINARY(numCH[6]), BYTE_TO_BINARY(numCH[5]), BYTE_TO_BINARY(numCH[4]), BYTE_TO_BINARY(numCH[3]), BYTE_TO_BINARY(numCH[2]), BYTE_TO_BINARY(numCH[1]), BYTE_TO_BINARY(numCH[0]));
 }
 
+#define isOne(ch) (ch == '1' ? 1 : 0)
+
+uint64_t binToInt(char* str){
+    uint64_t ret = 0;
+    size_t len = strlen(str);
+    for(size_t i=0; i<len; i++){
+        int n = isOne(str[len - i - 1]);
+        ret |= (n & 1) << i;
+    }
+    return ret;
+}
+
 void mainLoop(){
-    char* str = malloc(66);
+    char* str = malloc(128);
     prompt(str);
     while(strcmp(str,"exit\n") && strcmp(str,":q\n")){
         if(strlen(str) == 2)
@@ -42,6 +54,10 @@ void mainLoop(){
         }else if(str[0] == 'd'){
             uint64_t nmb;
             sscanf(str+1,"%" PRIu64 "\n",&nmb);
+            detail(nmb);
+        }else if(str[0] == 'b'){
+            str[strlen(str)-1] = 0;
+            uint64_t nmb = binToInt(str+1);
             detail(nmb);
         }else{
             uint64_t nmb;
