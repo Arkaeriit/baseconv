@@ -44,7 +44,7 @@ uint64_t binToInt(char* str){
 void mainLoop(){
     char* str = malloc(128);
     prompt(str);
-    while(strcmp(str,"exit\n") && strcmp(str,":q\n")){
+    while(strcmp(str,"exit\n") && strcmp(str,":q\n") && strcmp(str,"")){
         if(strlen(str) == 2)
             detail(str[0]);
         else if(str[0] == 'x' || str[0] == 'h'){
@@ -61,7 +61,7 @@ void mainLoop(){
             detail(nmb);
         }else{
             uint64_t nmb;
-            sscanf(str,"%i\n",&nmb);
+            sscanf(str,"%" PRIu64 "\n",&nmb);
             detail(nmb);
         }
         prompt(str);
