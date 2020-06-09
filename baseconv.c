@@ -14,6 +14,18 @@
     (byte & 0x02 ? '1' : '0'), \
     (byte & 0x01 ? '1' : '0') 
 
+void manual(){
+    puts("When starting this program with no arguments, you are presented a prompt. After it you should enter either:\n"
+         "* A single ASII character\n"
+         "* A 'd' followed by a number in base 10\n"
+         "* A 'h' or a 'x' followed by a number in base 16\n"
+         "* A 'b' followed by a number in base 2\n"
+         "The program will then print the number you entered in base 10, 16 and 2 and the ASCII equivalent of the 8 LSB of your number.\n"
+         "\n"
+         "To quit this program, simply enter 'exit' afer the prompt.\n"
+         "To print this message, enter 'help' after the prompt or start the program with any argument.");
+}
+
 char * prompt(char* str){
     printf(">");
     return fgets(str, 66, stdin);
@@ -41,13 +53,15 @@ uint64_t binToInt(char* str){
     return ret;
 }
 
-int mainLoop(){
+void mainLoop(){
     char* str = malloc(128);
     char* cmp = prompt(str);
     if(cmp == NULL)
-        return 1;
+        return;
     while(strcmp(str,"exit\n") && strcmp(str,":q\n") && strcmp(str,"")){
-        if(strlen(str) == 2)
+        if(!strcmp(str,"help\n"))
+            manual();
+        else if(strlen(str) == 2)
             detail(str[0]);
         else if(str[0] == 'x' || str[0] == 'h'){
             uint64_t nmb;
@@ -68,12 +82,16 @@ int mainLoop(){
         }
         cmp = prompt(str);
         if(cmp == NULL)
-            return 1;
+            return;
     }
+}
+
+int main(int argc, char** argv){
+    if(argc == 1)
+        mainLoop();
+    else
+        manual();
     return 0;
 }
 
-int main(){
-    return mainLoop();
-}
 
