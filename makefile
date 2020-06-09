@@ -2,10 +2,10 @@
 all : baseconv
 
 baseconv.o : baseconv.c
-	gcc -c baseconv.c -Wall -Werror -Os -o baseconv.o
+	gcc -c baseconv.c -Wall -Wextra -Os -o baseconv.o
 
 baseconv : baseconv.o
-	gcc baseconv.o -Wall -Werror -Os -o baseconv
+	gcc baseconv.o -Wall -Os -o baseconv
 
 clean :
 	rm -f *.o 
