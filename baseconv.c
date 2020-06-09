@@ -14,9 +14,9 @@
     (byte & 0x02 ? '1' : '0'), \
     (byte & 0x01 ? '1' : '0') 
 
-void prompt(char* str){
+char * prompt(char* str){
     printf(">");
-    fgets(str, 66, stdin);
+    return fgets(str, 66, stdin);
 }
 
 void detail(uint64_t num){
@@ -24,7 +24,7 @@ void detail(uint64_t num){
     printf("ASCII : %c\n"
            "decimal : %" PRIu64 "\n"
            "hexadecimal : %" PRIx64 "\n"
-           "binary : " BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN "\n"
+           "binary : " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n"
            "----------------------------\n"
            ,(char) num, num, num, BYTE_TO_BINARY(numCH[7]), BYTE_TO_BINARY(numCH[6]), BYTE_TO_BINARY(numCH[5]), BYTE_TO_BINARY(numCH[4]), BYTE_TO_BINARY(numCH[3]), BYTE_TO_BINARY(numCH[2]), BYTE_TO_BINARY(numCH[1]), BYTE_TO_BINARY(numCH[0]));
 }
@@ -41,9 +41,11 @@ uint64_t binToInt(char* str){
     return ret;
 }
 
-void mainLoop(){
+int mainLoop(){
     char* str = malloc(128);
-    prompt(str);
+    char* cmp = prompt(str);
+    if(cmp == NULL)
+        return 1;
     while(strcmp(str,"exit\n") && strcmp(str,":q\n") && strcmp(str,"")){
         if(strlen(str) == 2)
             detail(str[0]);
@@ -64,12 +66,14 @@ void mainLoop(){
             sscanf(str,"%" PRIu64 "\n",&nmb);
             detail(nmb);
         }
-        prompt(str);
+        cmp = prompt(str);
+        if(cmp == NULL)
+            return 1;
     }
+    return 0;
 }
 
 int main(){
-    mainLoop();
-    return 0;
+    return mainLoop();
 }
 
