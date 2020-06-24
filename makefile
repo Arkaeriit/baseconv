@@ -1,11 +1,14 @@
 
+FLAGS = -Wall -Wextra -g
+#FLAGS = -Os
+
 all : baseconv
 
 baseconv.o : baseconv.c
-	gcc -c baseconv.c -Wall -Wextra -Os -o baseconv.o
+	gcc -c baseconv.c $(FLAGS) -o baseconv.o
 
 baseconv : baseconv.o
-	gcc baseconv.o -Wall -Os -o baseconv
+	gcc baseconv.o $(FLAGS) -o baseconv
 
 clean :
 	rm -f *.o 

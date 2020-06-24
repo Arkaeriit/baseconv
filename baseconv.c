@@ -26,19 +26,28 @@ void manual(){
          "To print this message, enter 'help' after the prompt or start the program with any argument.");
 }
 
-char * prompt(char* str){
+char* prompt(char* str){
     printf(">");
     return fgets(str, 66, stdin);
 }
 
+char* bitToASCII(uint64_t nmb){
+    char* ret = malloc(9);
+    for(uint8_t i=0; i<8; i++) //We create a string with each byte of nmb
+        ret[i] = (char) (nmb >> (i * 8));
+    return ret;
+}
+
 void detail(uint64_t num){
     char* numCH = (char*) &num;
-    printf("ASCII : %c\n"
+    char* bTA = bitToASCII(num);
+    printf("ASCII : %s\n"
            "decimal : %" PRIu64 "\n"
            "hexadecimal : %" PRIx64 "\n"
            "binary : " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n"
            "----------------------------\n"
-           ,(char) num, num, num, BYTE_TO_BINARY(numCH[7]), BYTE_TO_BINARY(numCH[6]), BYTE_TO_BINARY(numCH[5]), BYTE_TO_BINARY(numCH[4]), BYTE_TO_BINARY(numCH[3]), BYTE_TO_BINARY(numCH[2]), BYTE_TO_BINARY(numCH[1]), BYTE_TO_BINARY(numCH[0]));
+           , bTA, num, num, BYTE_TO_BINARY(numCH[7]), BYTE_TO_BINARY(numCH[6]), BYTE_TO_BINARY(numCH[5]), BYTE_TO_BINARY(numCH[4]), BYTE_TO_BINARY(numCH[3]), BYTE_TO_BINARY(numCH[2]), BYTE_TO_BINARY(numCH[1]), BYTE_TO_BINARY(numCH[0]));
+    free(bTA);
 }
 
 #define isOne(ch) (ch == '1' ? 1 : 0)
@@ -53,6 +62,16 @@ uint64_t binToInt(char* str){
     return ret;
 }
 
+#define min(a,b) ( a > b ? b : a)
+
+uint64_t strToBitStream(char* str){
+    uint64_t ret = 0;
+    str[strlen(str)-1] = 0; //Removing the \n at the end of the string return by prompt
+    for(uint8_t i=0; i<min(strlen(str),8); i++)
+        ret += ((uint64_t) str[i] << (8 * i));
+    return ret;
+}
+
 void mainLoop(){
     char* str = malloc(128);
     char* cmp = prompt(str);
@@ -61,23 +80,22 @@ void mainLoop(){
     while(strcmp(str,"exit\n") && strcmp(str,":q\n") && strcmp(str,"")){
         if(!strcmp(str,"help\n"))
             manual();
-        else if(strlen(str) == 2)
+        else if(strlen(str) == 2) //A single char
             detail(str[0]);
-        else if(str[0] == 'x' || str[0] == 'h'){
+        else if(str[0] == 'x' || str[0] == 'h'){ //An exa number
             uint64_t nmb;
             sscanf(str+1,"%" PRIx64 "\n",&nmb);
             detail(nmb);
-        }else if(str[0] == 'd'){
+        }else if(str[0] == 'd'){ //A decimal number
             uint64_t nmb;
             sscanf(str+1,"%" PRIu64 "\n",&nmb);
             detail(nmb);
-        }else if(str[0] == 'b'){
+        }else if(str[0] == 'b'){ //A binary number
             str[strlen(str)-1] = 0;
             uint64_t nmb = binToInt(str+1);
             detail(nmb);
-        }else{
-            uint64_t nmb;
-            sscanf(str,"%" PRIu64 "\n",&nmb);
+        }else{ //A string
+            uint64_t nmb = strToBitStream(str);
             detail(nmb);
         }
         cmp = prompt(str);
