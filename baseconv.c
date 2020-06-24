@@ -26,18 +26,22 @@ void manual(){
          "To print this message, enter 'help' after the prompt or start the program with any argument.");
 }
 
+//Fill str with user input.
+//expect a '\n' at the end
 char* prompt(char* str){
     printf(">");
     return fgets(str, 66, stdin);
 }
 
-char* bitToASCII(uint64_t nmb){
+//Take the number num and represent it as a C string 
+char* bitToASCII(uint64_t num){
     char* ret = malloc(9);
-    for(uint8_t i=0; i<8; i++) //We create a string with each byte of nmb
-        ret[i] = (char) (nmb >> (i * 8));
+    for(uint8_t i=0; i<8; i++) //We create a string with each byte of num
+        ret[i] = (char) (num >> (i * 8));
     return ret;
 }
 
+//Print all the info we need about a number
 void detail(uint64_t num){
     char* numCH = (char*) &num;
     char* bTA = bitToASCII(num);
@@ -52,6 +56,7 @@ void detail(uint64_t num){
 
 #define isOne(ch) (ch == '1' ? 1 : 0)
 
+//Convert a string of '0' and '1' to a number
 uint64_t binToInt(char* str){
     uint64_t ret = 0;
     size_t len = strlen(str);
@@ -64,6 +69,7 @@ uint64_t binToInt(char* str){
 
 #define min(a,b) ( a > b ? b : a)
 
+//Convert the 8 first bits of str as if they were a 64 bit number
 uint64_t strToBitStream(char* str){
     uint64_t ret = 0;
     str[strlen(str)-1] = 0; //Removing the \n at the end of the string return by prompt
@@ -83,20 +89,20 @@ void mainLoop(){
         else if(strlen(str) == 2) //A single char
             detail(str[0]);
         else if(str[0] == 'x' || str[0] == 'h'){ //An exa number
-            uint64_t nmb;
-            sscanf(str+1,"%" PRIx64 "\n",&nmb);
-            detail(nmb);
+            uint64_t num;
+            sscanf(str+1,"%" PRIx64 "\n",&num);
+            detail(num);
         }else if(str[0] == 'd'){ //A decimal number
-            uint64_t nmb;
-            sscanf(str+1,"%" PRIu64 "\n",&nmb);
-            detail(nmb);
+            uint64_t num;
+            sscanf(str+1,"%" PRIu64 "\n",&num);
+            detail(num);
         }else if(str[0] == 'b'){ //A binary number
             str[strlen(str)-1] = 0;
-            uint64_t nmb = binToInt(str+1);
-            detail(nmb);
+            uint64_t num = binToInt(str+1);
+            detail(num);
         }else{ //A string
-            uint64_t nmb = strToBitStream(str);
-            detail(nmb);
+            uint64_t num = strToBitStream(str);
+            detail(num);
         }
         cmp = prompt(str);
         if(cmp == NULL)
