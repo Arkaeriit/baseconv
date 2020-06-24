@@ -1,6 +1,6 @@
 
-FLAGS = -Wall -Wextra -g
-#FLAGS = -Os
+#FLAGS = -Wall -Wextra -g
+FLAGS = -Os
 
 all : baseconv
 
