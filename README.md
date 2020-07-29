@@ -9,7 +9,8 @@ Translating number between base 10, base 16 and base 2
 ### Converting a number in many bases.
 
 When starting this program with no arguments, you are presented a prompt. After it you should enter either:
-* A single ASII character
+* A string of ASII characters
+* A negative number in base 10
 * A 'd' followed by a positive or negative number in base 10
 * A 'h' or a 'x' followed by a number in base 16
 * A 'b' followed by a number in base 2

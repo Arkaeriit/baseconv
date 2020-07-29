@@ -16,7 +16,8 @@
 
 void manual(){
     puts("When starting this program with no arguments, you are presented a prompt. After it you should enter either:\n"
-         "* A single ASII character\n"
+         "* A string of ASII characters\n"
+         "* A negative number in base 10\n"
          "* A 'd' followed by a positive or negative number in base 10\n"
          "* A 'h' or a 'x' followed by a number in base 16\n"
          "* A 'b' followed by a number in base 2\n"
