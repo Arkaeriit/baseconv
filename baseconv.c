@@ -17,7 +17,7 @@
 void manual(){
     puts("When starting this program with no arguments, you are presented a prompt. After it you should enter either:\n"
          "* A single ASII character\n"
-         "* A 'd' followed by a number in base 10\n"
+         "* A 'd' followed by a positive or negative number in base 10\n"
          "* A 'h' or a 'x' followed by a number in base 16\n"
          "* A 'b' followed by a number in base 2\n"
          "The program will then print the number you entered in base 10, 16 and 2 and the ASCII equivalent of the 8 LSB of your number.\n"
@@ -41,7 +41,7 @@ char* bitToASCII(uint64_t num){
     return ret;
 }
 
-//Print all the info we need about a number
+//Print all the info we need about a positive number
 void detail(uint64_t num){
     char* numCH = (char*) &num;
     char* bTA = bitToASCII(num);
@@ -51,6 +51,20 @@ void detail(uint64_t num){
            "binary : " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n"
            "----------------------------\n"
            , bTA, num, num, BYTE_TO_BINARY(numCH[7]), BYTE_TO_BINARY(numCH[6]), BYTE_TO_BINARY(numCH[5]), BYTE_TO_BINARY(numCH[4]), BYTE_TO_BINARY(numCH[3]), BYTE_TO_BINARY(numCH[2]), BYTE_TO_BINARY(numCH[1]), BYTE_TO_BINARY(numCH[0]));
+    free(bTA);
+}
+
+//Print all the info we need about a negative number
+void detailNeg(uint64_t numNeg){
+    uint64_t num = ~numNeg + 1; //Computing two's complement
+    char* numCH = (char*) &num;
+    char* bTA = bitToASCII(num);
+    printf("ASCII : %s\n"
+           "decimal : -%" PRIu64 "\n"
+           "hexadecimal : %" PRIx64 "\n"
+           "binary : " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n"
+           "----------------------------\n"
+           , bTA, numNeg, num, BYTE_TO_BINARY(numCH[7]), BYTE_TO_BINARY(numCH[6]), BYTE_TO_BINARY(numCH[5]), BYTE_TO_BINARY(numCH[4]), BYTE_TO_BINARY(numCH[3]), BYTE_TO_BINARY(numCH[2]), BYTE_TO_BINARY(numCH[1]), BYTE_TO_BINARY(numCH[0]));
     free(bTA);
 }
 
@@ -92,10 +106,20 @@ void mainLoop(){
             uint64_t num;
             sscanf(str+1,"%" PRIx64 "\n",&num);
             detail(num);
-        }else if(str[0] == 'd'){ //A decimal number
+        }else if(str[0] == 'd'){ //A positive decimal number
+            if(str[1] == '-') { //A negative decimal number
+                uint64_t num;
+                sscanf(str+2,"%" PRIu64 "\n",&num);
+                detailNeg(num);
+             }else{
+                uint64_t num;
+                sscanf(str+1,"%" PRIu64 "\n",&num);
+                detail(num);
+             }
+        }else if(str[0] == '-'){ //A negative decimal number
             uint64_t num;
             sscanf(str+1,"%" PRIu64 "\n",&num);
-            detail(num);
+            detailNeg(num);
         }else if(str[0] == 'b'){ //A binary number
             str[strlen(str)-1] = 0;
             uint64_t num = binToInt(str+1);
