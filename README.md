@@ -24,6 +24,10 @@ To quit the program, simply enter `exit` after the prompt.
 
 To print a help message, enter `help` after the prompt or start the program with any argument.
 
+### Usage from the command line
+
+If you only need to convert a single number, you could call baseconv with the number you need to convert as an argument (with the same formating as described above). The results will be showed as if you used the prompt but the program stops immediately after showing the results.
+
 ### Instalation
 
 To install, this program simply do

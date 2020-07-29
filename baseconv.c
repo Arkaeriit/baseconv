@@ -24,7 +24,10 @@ void manual(){
          "The program will then print the number you entered in base 10, 16 and 2 and the ASCII equivalent of the 8 LSB of your number.\n"
          "\n"
          "To quit this program, simply enter 'exit' afer the prompt.\n"
-         "To print this message, enter 'help' after the prompt or start the program with any argument.");
+         "To print this message, enter 'help' after the prompt or start the program with any argument.\n"
+         "\n"
+         "Alternatively, if you give a single argument to this program it will process it and exit immediately."
+    );
 }
 
 //Fill str with user input.
@@ -93,42 +96,46 @@ uint64_t strToBitStream(char* str){
     return ret;
 }
 
+void processString(char* str){
+    if(!strcmp(str,"help\n"))
+        manual();
+    else if(strlen(str) == 2) //A single char
+        detail(str[0]);
+    else if(str[0] == 'x' || str[0] == 'h'){ //An exa number
+        uint64_t num;
+        sscanf(str+1,"%" PRIx64 "\n",&num);
+        detail(num);
+    }else if(str[0] == 'd'){ //A positive decimal number
+        if(str[1] == '-') { //A negative decimal number
+            uint64_t num;
+            sscanf(str+2,"%" PRIu64 "\n",&num);
+            detailNeg(num);
+         }else{
+            uint64_t num;
+            sscanf(str+1,"%" PRIu64 "\n",&num);
+            detail(num);
+         }
+    }else if(str[0] == '-'){ //A negative decimal number
+        uint64_t num;
+        sscanf(str+1,"%" PRIu64 "\n",&num);
+        detailNeg(num);
+    }else if(str[0] == 'b'){ //A binary number
+        str[strlen(str)-1] = 0;
+        uint64_t num = binToInt(str+1);
+        detail(num);
+    }else{ //A string
+        uint64_t num = strToBitStream(str);
+        detail(num);
+    }
+}
+
 void mainLoop(){
     char* str = malloc(128);
     char* cmp = prompt(str);
     if(cmp == NULL)
         return;
     while(strcmp(str,"exit\n") && strcmp(str,":q\n") && strcmp(str,"")){
-        if(!strcmp(str,"help\n"))
-            manual();
-        else if(strlen(str) == 2) //A single char
-            detail(str[0]);
-        else if(str[0] == 'x' || str[0] == 'h'){ //An exa number
-            uint64_t num;
-            sscanf(str+1,"%" PRIx64 "\n",&num);
-            detail(num);
-        }else if(str[0] == 'd'){ //A positive decimal number
-            if(str[1] == '-') { //A negative decimal number
-                uint64_t num;
-                sscanf(str+2,"%" PRIu64 "\n",&num);
-                detailNeg(num);
-             }else{
-                uint64_t num;
-                sscanf(str+1,"%" PRIu64 "\n",&num);
-                detail(num);
-             }
-        }else if(str[0] == '-'){ //A negative decimal number
-            uint64_t num;
-            sscanf(str+1,"%" PRIu64 "\n",&num);
-            detailNeg(num);
-        }else if(str[0] == 'b'){ //A binary number
-            str[strlen(str)-1] = 0;
-            uint64_t num = binToInt(str+1);
-            detail(num);
-        }else{ //A string
-            uint64_t num = strToBitStream(str);
-            detail(num);
-        }
+        processString(str);
         cmp = prompt(str);
         if(cmp == NULL)
             return;
@@ -138,6 +145,8 @@ void mainLoop(){
 int main(int argc, char** argv){
     if(argc == 1)
         mainLoop();
+    else if(argc == 2)
+        processString(argv[1]);
     else
         manual();
     return 0;
