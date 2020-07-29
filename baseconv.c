@@ -106,12 +106,12 @@ void processString(char* str){
         uint64_t num;
         sscanf(str+1,"%" PRIx64 ,&num);
         detail(num);
-    }else if(str[0] == 'd'){ //A positive decimal number
+    }else if(str[0] == 'd'){ //A decimal number
         if(str[1] == '-') { //A negative decimal number
             uint64_t num;
             sscanf(str+2,"%" PRIu64 ,&num);
             detailNeg(num);
-         }else{
+         }else{ //A positive decimal number
             uint64_t num;
             sscanf(str+1,"%" PRIu64 ,&num);
             detail(num);
