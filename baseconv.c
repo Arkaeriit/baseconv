@@ -90,34 +90,35 @@ uint64_t binToInt(char* str){
 //Convert the 8 first bits of str as if they were a 64 bit number
 uint64_t strToBitStream(char* str){
     uint64_t ret = 0;
-    str[strlen(str)-1] = 0; //Removing the \n at the end of the string return by prompt
     for(uint8_t i=0; i<min(strlen(str),8); i++)
         ret += ((uint64_t) str[i] << (8 * i));
     return ret;
 }
 
 void processString(char* str){
-    if(!strcmp(str,"help\n"))
+    if(str[strlen(str)-1] == '\n')
+        str[strlen(str)-1] = 0; //Removing the \n at the end of the string return by prompt
+    if(!strcmp(str,"help") || !strcmp(str,"--help") || !strcmp(str,"-h"))
         manual();
-    else if(strlen(str) == 2) //A single char
+    else if(strlen(str) == 1) //A single char
         detail(str[0]);
     else if(str[0] == 'x' || str[0] == 'h'){ //An exa number
         uint64_t num;
-        sscanf(str+1,"%" PRIx64 "\n",&num);
+        sscanf(str+1,"%" PRIx64 ,&num);
         detail(num);
     }else if(str[0] == 'd'){ //A positive decimal number
         if(str[1] == '-') { //A negative decimal number
             uint64_t num;
-            sscanf(str+2,"%" PRIu64 "\n",&num);
+            sscanf(str+2,"%" PRIu64 ,&num);
             detailNeg(num);
          }else{
             uint64_t num;
-            sscanf(str+1,"%" PRIu64 "\n",&num);
+            sscanf(str+1,"%" PRIu64 ,&num);
             detail(num);
          }
     }else if(str[0] == '-'){ //A negative decimal number
         uint64_t num;
-        sscanf(str+1,"%" PRIu64 "\n",&num);
+        sscanf(str+1,"%" PRIu64 ,&num);
         detailNeg(num);
     }else if(str[0] == 'b'){ //A binary number
         str[strlen(str)-1] = 0;
