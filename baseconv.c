@@ -31,7 +31,6 @@ void manual(){
 }
 
 //Fill str with user input.
-//expect a '\n' at the end
 char* prompt(char* str){
     printf(">");
     return fgets(str, 66, stdin);
@@ -121,7 +120,6 @@ void processString(char* str){
         sscanf(str+1,"%" PRIu64 ,&num);
         detailNeg(num);
     }else if(str[0] == 'b'){ //A binary number
-        str[strlen(str)-1] = 0;
         uint64_t num = binToInt(str+1);
         detail(num);
     }else{ //A string
@@ -132,7 +130,7 @@ void processString(char* str){
 
 void mainLoop(){
     char* str = malloc(128);
-    char* cmp = prompt(str);
+    char* cmp = prompt(str); //Comp is str or NULL depending on the success of fget
     if(cmp == NULL)
         return;
     while(strcmp(str,"exit\n") && strcmp(str,":q\n") && strcmp(str,"")){
