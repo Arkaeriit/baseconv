@@ -2,7 +2,7 @@
 
 Translating number between base 10, base 16 and base 2
 
-![Alt text](https://i.imgur.com/PExb4MJ.png "Converting numbers")
+![Converting numbers](https://i.imgur.com/PExb4MJ.png)
 
 ## User manual
 
