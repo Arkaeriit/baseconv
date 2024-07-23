@@ -89,8 +89,7 @@ uint64_t binToInt(char* str){
 //Convert the 8 first bits of str as if they were a 64 bit number
 uint64_t strToBitStream(char* str){
     uint64_t ret = 0;
-    for(uint8_t i=0; i<min(strlen(str),8); i++)
-        ret += ((uint64_t) str[i] << (8 * i));
+    memcpy(&ret, str, strnlen(str, sizeof(uint64_t)));
     return ret;
 }
 
