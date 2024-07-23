@@ -98,8 +98,6 @@ void processString(char* str){
         str[strlen(str)-1] = 0; //Removing the \n at the end of the string return by prompt
     if(!strcmp(str,"help") || !strcmp(str,"--help") || !strcmp(str,"-h"))
         manual();
-    else if(strlen(str) == 1) //A single char
-        detail(str[0]);
     else if(str[0] == 'x' || str[0] == 'h'){ //An exa number
         uint64_t num;
         sscanf(str+1,"%" PRIx64 ,&num);
